@@ -1,10 +1,8 @@
-(ns tictactoe.core)
+(ns tictactoe.core
+  (:require [compojure.core :refer :all]
+            [compojure.route :as route]))
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
-
-
-
-
+(defroutes handler
+  (GET "/" [] "<h1>Hello World</h1>")
+  (GET "/foo" [] "<h1>Hello Foo</h1>")
+  (route/not-found "<h1>Page not found</h1>"))

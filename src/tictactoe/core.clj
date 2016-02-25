@@ -4,7 +4,7 @@
             [compojure.route :as route]))
 
 (def game-state
-  [[" ", "X", " "]
+  [[" ", "X", "O"]
    [" ", "O", "X"]
    ["O", " ", " "]])
 
@@ -13,6 +13,29 @@
   (string/join "-----\n"
                (for [row board]
                  (str (string/join "|" row) "\n"))))
+
+(defn horizontal [board]
+  (for [row board]
+    (when (apply = row)
+      [(first row)])))
+
+(defn vertical [board]
+  (horizontal (apply map list board)))
+
+(defn diagonal [board]
+  (for [dir [(for [i (range 3)] [i i])
+             (for [i (range 3)] [i (- 2 i)])]]
+    (let [pieces (for [pos dir]
+                   (get-in board pos))]
+      (when (apply = pieces)
+        [(first pieces)]))))
+
+(defn winner [board]
+  (first (remove #{" "}
+                 (for [orientation [horizontal vertical diagonal]
+                       choice (orientation board)
+                       winner choice]
+                   winner))))
 
 (defn show-board
   [req]
